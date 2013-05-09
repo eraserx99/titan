@@ -47,7 +47,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
         FoundationDBKeyColumnValueStore kv = openStores.get(name);
 
         if (kv == null) {
-            FoundationDBKeyColumnValueStore newkv = new FoundationDBKeyColumnValueStore();
+            FoundationDBKeyColumnValueStore newkv = new FoundationDBKeyColumnValueStore(dbname, name);
             kv = openStores.putIfAbsent(name, newkv);
 
             if (kv == null) kv = newkv;

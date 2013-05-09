@@ -1,5 +1,6 @@
 package com.thinkaurelius.titan.diskstorage.foundationdb;
 
+import com.foundationdb.tuple.Tuple;
 import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.*;
 
@@ -8,9 +9,11 @@ import java.util.List;
 
 public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
+    private final String dbName;
     private final String storeName;
 
-    public FoundationDBKeyColumnValueStore(String name) {
+    public FoundationDBKeyColumnValueStore(String dbname, String name) {
+        dbName = dbname;
         storeName = name;
     }
 
@@ -62,5 +65,9 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     @Override
     public void close() throws StorageException {
         // todo
+    }
+
+    private Tuple storePrefix() {
+        return new Tuple().add(dbName).add(storeName);
     }
 }
