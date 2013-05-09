@@ -4,9 +4,10 @@ import com.foundationdb.FDBError;
 import com.foundationdb.Transaction;
 import com.thinkaurelius.titan.diskstorage.PermanentStorageException;
 import com.thinkaurelius.titan.diskstorage.StorageException;
-import com.thinkaurelius.titan.diskstorage.TransactionHandle;
+import com.thinkaurelius.titan.diskstorage.keycolumnvalue.ConsistencyLevel;
+import com.thinkaurelius.titan.diskstorage.keycolumnvalue.StoreTransaction;
 
-public class FoundationDBTransaction implements TransactionHandle {
+public class FoundationDBTransaction implements StoreTransaction {
 
     private Transaction tr;
 
@@ -35,6 +36,11 @@ public class FoundationDBTransaction implements TransactionHandle {
 
     @Override
     public void flush() throws StorageException {
+                      // todo
+    }
 
+    @Override
+    public ConsistencyLevel getConsistencyLevel() {
+        return ConsistencyLevel.DEFAULT;   // todo
     }
 }
