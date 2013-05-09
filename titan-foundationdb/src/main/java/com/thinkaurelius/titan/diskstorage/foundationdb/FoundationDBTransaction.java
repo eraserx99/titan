@@ -1,9 +1,11 @@
 package com.thinkaurelius.titan.diskstorage.foundationdb;
 
 import com.foundationdb.FDBError;
+import com.foundationdb.RangeQuery;
 import com.foundationdb.Transaction;
 import com.thinkaurelius.titan.diskstorage.PermanentStorageException;
 import com.thinkaurelius.titan.diskstorage.StorageException;
+import com.thinkaurelius.titan.diskstorage.TemporaryStorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.ConsistencyLevel;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.StoreTransaction;
 
@@ -13,6 +15,33 @@ public class FoundationDBTransaction implements StoreTransaction {
 
     public FoundationDBTransaction(Transaction tr) {
         this.tr = tr;
+    }
+
+    public RangeQuery getRangeStartsWith(byte[] key) throws StorageException{
+        try {
+            return tr.getRangeStartsWith(key);
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
+    }
+
+    public byte[] get(byte[] key) throws StorageException{
+        try {
+            return tr.get(key).get();
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
+    }
+
+    public void set(byte[] key, byte[] value) throws StorageException{
+        try {
+            tr.set(key, value);
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
     }
 
     @Override
