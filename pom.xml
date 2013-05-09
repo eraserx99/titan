@@ -78,6 +78,7 @@
         <module>titan-es</module>
         <module>titan-lucene</module>
         <module>titan-all</module>
+        <module>titan-foundationdb</module>
     </modules>
     <build>
         <directory>${basedir}/target</directory>
