@@ -8,6 +8,7 @@ import com.foundationdb.tuple.Tuple;
 import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.TemporaryStorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.*;
+import org.apache.commons.configuration.Configuration;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
@@ -22,10 +23,10 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
 
     private final String dbname;
 
-    public FoundationDBStoreManager(String name) {
-        dbname = name;
+    public FoundationDBStoreManager(Configuration config) {
+        dbname = config.getString("tablename", "titan");
 
-        fdb = FDB.selectAPIVersion(22);
+        fdb = FDB.selectAPIVersion(21);
         db = fdb.open().get();
         openStores = new ConcurrentHashMap<String, FoundationDBKeyColumnValueStore>();
         features = new StoreFeatures();
