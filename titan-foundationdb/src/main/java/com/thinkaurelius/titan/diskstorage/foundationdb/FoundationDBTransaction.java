@@ -35,6 +35,15 @@ public class FoundationDBTransaction implements StoreTransaction {
         }
     }
 
+    public void clear(byte[] key) throws StorageException{
+        try {
+            tr.clear(key);
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
+    }
+
     public void set(byte[] key, byte[] value) throws StorageException{
         try {
             tr.set(key, value);
