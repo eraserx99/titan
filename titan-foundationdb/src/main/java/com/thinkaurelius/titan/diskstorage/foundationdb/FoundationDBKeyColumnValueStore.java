@@ -53,7 +53,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         List<Entry> returnList = new ArrayList<Entry>();
         RangeQuery queryResult = getTransaction(txh).getRange(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey())).add(getBytes(query.getSliceStart())).pack(), storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey())).add(getBytes(query.getSliceEnd())).pack()).limit(query.getLimit());
         List<KeyValue> kvList = queryResult.asList().get();
-        assert kvList.size() < query.getLimit();
+        assert kvList.size() <= query.getLimit();
 
         for(KeyValue kv : kvList) {
             returnList.add(new Entry(ByteBuffer.wrap(Tuple.fromBytes(kv.getKey()).getBytes(4)), ByteBuffer.wrap(kv.getValue())));
