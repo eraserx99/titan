@@ -59,13 +59,17 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     @Override
     public void mutate(ByteBuffer key, List<Entry> additions, List<ByteBuffer> deletions, StoreTransaction txh) throws StorageException {
-        for (ByteBuffer deleteColumn : deletions) {
-            ((FoundationDBTransaction) txh).clear(storePrefix().add(key.array()).add(deleteColumn.array()).pack());
-            ((FoundationDBTransaction) txh).clear(storePrefix().add(KEYS_SUBSPACE).add(key.array()).pack());
+        if (deletions != null) {
+            for (ByteBuffer deleteColumn : deletions) {
+                ((FoundationDBTransaction) txh).clear(storePrefix().add(key.array()).add(deleteColumn.array()).pack());
+                ((FoundationDBTransaction) txh).clear(storePrefix().add(KEYS_SUBSPACE).add(key.array()).pack());
+            }
         }
-        for (Entry addColumn : additions) {
-            ((FoundationDBTransaction) txh).set(storePrefix().add(key.array()).add(addColumn.getColumn().array()).pack(), addColumn.getValue().array());
-            ((FoundationDBTransaction) txh).set(storePrefix().add(KEYS_SUBSPACE).add(key.array()).pack(), "".getBytes());
+        if (additions != null) {
+            for (Entry addColumn : additions) {
+                ((FoundationDBTransaction) txh).set(storePrefix().add(key.array()).add(addColumn.getColumn().array()).pack(), addColumn.getValue().array());
+                ((FoundationDBTransaction) txh).set(storePrefix().add(KEYS_SUBSPACE).add(key.array()).pack(), "".getBytes());
+            }
         }
     }
 

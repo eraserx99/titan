@@ -43,7 +43,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
     }
 
     @Override
-    public KeyColumnValueStore openDatabase(String name) throws StorageException {
+    public FoundationDBKeyColumnValueStore openDatabase(String name) throws StorageException {
         FoundationDBKeyColumnValueStore kv = openStores.get(name);
 
         if (kv == null) {
@@ -58,7 +58,12 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
 
     @Override
     public void mutateMany(Map<String, Map<ByteBuffer, KCVMutation>> mutations, StoreTransaction txh) throws StorageException {
-        // todo
+        for (Map.Entry<String, Map<ByteBuffer, KCVMutation>> entry: mutations.entrySet()) {
+            FoundationDBKeyColumnValueStore store = openDatabase(entry.getKey());
+            for (Map.Entry<ByteBuffer, KCVMutation> entryEntry : entry.getValue().entrySet()) {
+                store.mutate(entryEntry.getKey(), entryEntry.getValue().getAdditions(), entryEntry.getValue().getDeletions(), txh);
+            }
+        }
     }
 
     @Override
