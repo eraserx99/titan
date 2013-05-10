@@ -13,12 +13,14 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     private final String dbName;
     private final String storeName;
+    private final FoundationDBStoreManager manager;
 
     private static final int KEYS_SUBSPACE = 1;
 
-    public FoundationDBKeyColumnValueStore(String dbname, String name) {
-        dbName = dbname;
+    public FoundationDBKeyColumnValueStore(String name, FoundationDBStoreManager m) {
+        dbName = m.dbname;
         storeName = name;
+        manager = m;
     }
 
     @Override

@@ -21,7 +21,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
     private final ConcurrentHashMap<String, FoundationDBKeyColumnValueStore> openStores;
     private final StoreFeatures features;
 
-    private final String dbname;
+    public final String dbname;
 
     public FoundationDBStoreManager(Configuration config) {
         dbname = config.getString("tablename", "titan");
@@ -48,7 +48,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
         FoundationDBKeyColumnValueStore kv = openStores.get(name);
 
         if (kv == null) {
-            FoundationDBKeyColumnValueStore newkv = new FoundationDBKeyColumnValueStore(dbname, name);
+            FoundationDBKeyColumnValueStore newkv = new FoundationDBKeyColumnValueStore(name, this);
             kv = openStores.putIfAbsent(name, newkv);
 
             if (kv == null) kv = newkv;
