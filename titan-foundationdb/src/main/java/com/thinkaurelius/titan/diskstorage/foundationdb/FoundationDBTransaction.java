@@ -26,13 +26,9 @@ public class FoundationDBTransaction implements StoreTransaction {
     @Override
     public void commit() throws StorageException {
         if (tr == null) return;
-        try {
-            tr.commit().get();
-            tr = null;
-        }
-        catch(FDBError err) {
-            throw new PermanentStorageException(err.getMessage(),err.getCause());
-        }
+        tr.commit().get();
+        tr = null;
+
     }
 
     @Override

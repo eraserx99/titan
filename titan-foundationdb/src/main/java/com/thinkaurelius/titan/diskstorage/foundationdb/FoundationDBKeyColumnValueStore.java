@@ -39,6 +39,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     private byte[] getBytes(ByteBuffer b) {
         byte[] bytes = new byte[b.remaining()];
         b.get(bytes);
+        b.rewind();
         return bytes;
     }
 
@@ -82,8 +83,8 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         }
         if (additions != null) {
             for (Entry addColumn : additions) {
-                getTransaction(txh).set(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
                 getTransaction(txh).set(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack(), "".getBytes());
+                getTransaction(txh).set(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
             }
         }
     }
