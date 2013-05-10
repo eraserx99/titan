@@ -38,7 +38,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     @Override
     public boolean containsKey(ByteBuffer key, StoreTransaction txh) throws StorageException {
-        return getTransaction(txh).get(storePrefix(Subspace.KEYS_SUBSPACE).add(key.array()).pack()) != null;
+        return getTransaction(txh).get(storePrefix(Subspace.KEYS_SUBSPACE).add(key.array()).pack()).get() != null;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     @Override
     public boolean containsKeyColumn(ByteBuffer key, ByteBuffer column, StoreTransaction txh) throws StorageException {
-        return getTransaction(txh).get(storePrefix(Subspace.DATA_SUBSPACE).add(key.array()).add(column.array()).pack()) != null;
+        return getTransaction(txh).get(storePrefix(Subspace.DATA_SUBSPACE).add(key.array()).add(column.array()).pack()).get() != null;
     }
 
     @Override
