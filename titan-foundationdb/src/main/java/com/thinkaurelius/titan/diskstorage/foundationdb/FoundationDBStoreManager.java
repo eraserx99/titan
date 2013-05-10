@@ -5,7 +5,6 @@ import com.foundationdb.FDB;
 import com.foundationdb.FDBError;
 import com.foundationdb.Transaction;
 import com.foundationdb.tuple.Tuple;
-import com.thinkaurelius.titan.diskstorage.PermanentStorageException;
 import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.TemporaryStorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.*;

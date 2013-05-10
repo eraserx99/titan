@@ -6,6 +6,7 @@ import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.*;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     @Override
     public List<Entry> getSlice(KeySliceQuery query, StoreTransaction txh) throws StorageException {
+        List<Entry> returnList = new ArrayList<Entry>();
+
+
         return null;  // todo
     }
 
