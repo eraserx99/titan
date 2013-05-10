@@ -44,7 +44,6 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     @Override
     public boolean containsKey(ByteBuffer key, StoreTransaction txh) throws StorageException {
-
         return getTransaction(txh).get(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack()).get() != null;
     }
 
@@ -56,7 +55,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         assert kvList.size() < query.getLimit();
 
         for(KeyValue kv : kvList) {
-            returnList.add(new Entry(ByteBuffer.wrap(Tuple.fromBytes(kv.getKey()).getBytes(3)), ByteBuffer.wrap(kv.getValue())));
+            returnList.add(new Entry(ByteBuffer.wrap(Tuple.fromBytes(kv.getKey()).getBytes(4)), ByteBuffer.wrap(kv.getValue())));
         }
 
         return returnList;
@@ -79,7 +78,6 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         if (deletions != null) {
             for (ByteBuffer deleteColumn : deletions) {
                 getTransaction(txh).clear(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(deleteColumn)).pack());
-                getTransaction(txh).clear(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack());
             }
         }
         if (additions != null) {
@@ -107,7 +105,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
             @Override
             public ByteBuffer next() throws StorageException {
-                return ByteBuffer.wrap(results.next().getKey());
+                return ByteBuffer.wrap(Tuple.fromBytes(results.next().getKey()).getBytes(3));
             }
 
             @Override
