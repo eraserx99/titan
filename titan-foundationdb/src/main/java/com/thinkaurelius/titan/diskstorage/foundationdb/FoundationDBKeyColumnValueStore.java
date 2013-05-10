@@ -36,15 +36,22 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         manager = m;
     }
 
+    private byte[] getBytes(ByteBuffer b) {
+        byte[] bytes = new byte[b.remaining()];
+        b.get(bytes);
+        return bytes;
+    }
+
     @Override
     public boolean containsKey(ByteBuffer key, StoreTransaction txh) throws StorageException {
-        return getTransaction(txh).get(storePrefix(Subspace.KEYS_SUBSPACE).add(key.array()).pack()).get() != null;
+
+        return getTransaction(txh).get(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack()).get() != null;
     }
 
     @Override
     public List<Entry> getSlice(KeySliceQuery query, StoreTransaction txh) throws StorageException {
         List<Entry> returnList = new ArrayList<Entry>();
-        RangeQuery queryResult = getTransaction(txh).getRange(storePrefix(Subspace.DATA_SUBSPACE).add(query.getKey().array()).add(query.getSliceStart().array()).pack(), storePrefix(Subspace.DATA_SUBSPACE).add(query.getKey().array()).add(query.getSliceEnd().array()).pack()).limit(query.getLimit());
+        RangeQuery queryResult = getTransaction(txh).getRange(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey())).add(getBytes(query.getSliceStart())).pack(), storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey())).add(getBytes(query.getSliceEnd())).pack()).limit(query.getLimit());
         List<KeyValue> kvList = queryResult.asList().get();
         assert kvList.size() < query.getLimit();
 
@@ -57,28 +64,28 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
 
     @Override
     public ByteBuffer get(ByteBuffer key, ByteBuffer column, StoreTransaction txh) throws StorageException {
-        byte[] result = getTransaction(txh).get(storePrefix(Subspace.DATA_SUBSPACE).add(key.array()).add(column.array()).pack()).get();
+        byte[] result = getTransaction(txh).get(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(column)).pack()).get();
         if (result == null) return null;
         else return ByteBuffer.wrap(result);
     }
 
     @Override
     public boolean containsKeyColumn(ByteBuffer key, ByteBuffer column, StoreTransaction txh) throws StorageException {
-        return getTransaction(txh).get(storePrefix(Subspace.DATA_SUBSPACE).add(key.array()).add(column.array()).pack()).get() != null;
+        return getTransaction(txh).get(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(column)).pack()).get() != null;
     }
 
     @Override
     public void mutate(ByteBuffer key, List<Entry> additions, List<ByteBuffer> deletions, StoreTransaction txh) throws StorageException {
         if (deletions != null) {
             for (ByteBuffer deleteColumn : deletions) {
-                getTransaction(txh).clear(storePrefix(Subspace.DATA_SUBSPACE).add(key.array()).add(deleteColumn.array()).pack());
-                getTransaction(txh).clear(storePrefix(Subspace.KEYS_SUBSPACE).add(key.array()).pack());
+                getTransaction(txh).clear(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(deleteColumn)).pack());
+                getTransaction(txh).clear(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack());
             }
         }
         if (additions != null) {
             for (Entry addColumn : additions) {
-                getTransaction(txh).set(storePrefix(Subspace.DATA_SUBSPACE).add(key.array()).add(addColumn.getColumn().array()).pack(), addColumn.getValue().array());
-                getTransaction(txh).set(storePrefix(Subspace.KEYS_SUBSPACE).add(key.array()).pack(), "".getBytes());
+                getTransaction(txh).set(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
+                getTransaction(txh).set(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack(), "".getBytes());
             }
         }
     }
