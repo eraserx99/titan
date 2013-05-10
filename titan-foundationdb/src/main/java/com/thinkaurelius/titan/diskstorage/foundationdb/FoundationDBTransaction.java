@@ -18,59 +18,10 @@ public class FoundationDBTransaction implements StoreTransaction {
         this.tr = tr;
     }
 
-    public RangeQuery getRange(KeySelector k1, KeySelector k2) throws StorageException {
-        try {
-            return tr.getRange(k1, k2);
-        }
-        catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
-        }
+    public Transaction getTransaction() {
+        return tr;
     }
 
-    public RangeQuery getRange(byte[] k1, byte[] k2) throws StorageException {
-        try {
-            return tr.getRange(k1, k2);
-        }
-        catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
-        }
-    }
-
-    public RangeQuery getRangeStartsWith(byte[] key) throws StorageException {
-        try {
-            return tr.getRangeStartsWith(key);
-        }
-        catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
-        }
-    }
-
-    public byte[] get(byte[] key) throws StorageException{
-        try {
-            return tr.get(key).get();
-        }
-        catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
-        }
-    }
-
-    public void clear(byte[] key) throws StorageException{
-        try {
-            tr.clear(key);
-        }
-        catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
-        }
-    }
-
-    public void set(byte[] key, byte[] value) throws StorageException{
-        try {
-            tr.set(key, value);
-        }
-        catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
-        }
-    }
 
     @Override
     public void commit() throws StorageException {
