@@ -1,6 +1,7 @@
 package com.thinkaurelius.titan.diskstorage.foundationdb;
 
 import com.foundationdb.KeyValue;
+import com.foundationdb.RangeQuery;
 import com.foundationdb.tuple.Tuple;
 import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.*;
@@ -33,9 +34,15 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     @Override
     public List<Entry> getSlice(KeySliceQuery query, StoreTransaction txh) throws StorageException {
         List<Entry> returnList = new ArrayList<Entry>();
+        RangeQuery queryResult = ((FoundationDBTransaction) txh).getRange(storePrefix().add(query.getKey().array()).add(query.getSliceStart().array()).pack(), storePrefix().add(query.getKey().array()).add(query.getSliceEnd().array()).pack()).limit(query.getLimit());
+        List<KeyValue> kvList = queryResult.asList().get();
+        assert kvList.size() < query.getLimit();
 
+        for(KeyValue kv : kvList) {
+            returnList.add(new Entry(ByteBuffer.wrap(Tuple.fromBytes(kv.getKey()).getBytes(3)), ByteBuffer.wrap(kv.getValue())));
+        }
 
-        return null;  // todo
+        return returnList;
     }
 
     @Override

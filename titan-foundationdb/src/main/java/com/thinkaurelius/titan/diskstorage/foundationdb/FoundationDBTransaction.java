@@ -27,6 +27,15 @@ public class FoundationDBTransaction implements StoreTransaction {
         }
     }
 
+    public RangeQuery getRange(byte[] k1, byte[] k2) throws StorageException {
+        try {
+            return tr.getRange(k1, k2);
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
+    }
+
     public RangeQuery getRangeStartsWith(byte[] key) throws StorageException {
         try {
             return tr.getRangeStartsWith(key);
