@@ -18,6 +18,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
 
     private final Database db;
     private final ConcurrentHashMap<String, FoundationDBKeyColumnValueStore> openStores;
+    private final ConcurrentHashMap<String, String> configuration;
     private final StoreFeatures features;
 
     public final String dbname;
@@ -28,6 +29,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
         FDB fdb = FDB.selectAPIVersion(21);
         db = fdb.open().get();
         openStores = new ConcurrentHashMap<String, FoundationDBKeyColumnValueStore>();
+        configuration = new ConcurrentHashMap<String, String>();
         features = new StoreFeatures();
 
         features.supportsScan=true;
@@ -99,11 +101,11 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
 
     @Override
     public String getConfigurationProperty(String key) throws StorageException {
-        return null;  // todo
+        return configuration.get(key);
     }
 
     @Override
     public void setConfigurationProperty(String key, String value) throws StorageException {
-        // todo
+        configuration.putIfAbsent(key, value);
     }
 }
