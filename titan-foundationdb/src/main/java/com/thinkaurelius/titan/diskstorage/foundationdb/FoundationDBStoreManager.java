@@ -5,6 +5,7 @@ import com.foundationdb.FDB;
 import com.foundationdb.FDBError;
 import com.foundationdb.Transaction;
 import com.foundationdb.tuple.Tuple;
+import com.thinkaurelius.titan.diskstorage.PermanentStorageException;
 import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.TemporaryStorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.*;
@@ -16,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
 
-    private final FDB fdb;
     private final Database db;
     private final ConcurrentHashMap<String, FoundationDBKeyColumnValueStore> openStores;
     private final StoreFeatures features;
@@ -26,7 +26,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
     public FoundationDBStoreManager(Configuration config) {
         dbname = config.getString("tablename", "titan");
 
-        fdb = FDB.selectAPIVersion(21);
+        FDB fdb = FDB.selectAPIVersion(21);
         db = fdb.open().get();
         openStores = new ConcurrentHashMap<String, FoundationDBKeyColumnValueStore>();
         features = new StoreFeatures();
@@ -59,7 +59,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
 
     @Override
     public void mutateMany(Map<String, Map<ByteBuffer, KCVMutation>> mutations, StoreTransaction txh) throws StorageException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // todo
     }
 
     @Override
@@ -72,7 +72,6 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
     public void close() throws StorageException {
         openStores.clear();
         db.dispose();
-        fdb.dispose();
     }
 
     @Override
