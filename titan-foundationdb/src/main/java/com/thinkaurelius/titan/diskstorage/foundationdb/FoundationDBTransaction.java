@@ -1,7 +1,9 @@
 package com.thinkaurelius.titan.diskstorage.foundationdb;
 
+import com.foundationdb.FDBError;
 import com.foundationdb.Transaction;
 import com.thinkaurelius.titan.diskstorage.StorageException;
+import com.thinkaurelius.titan.diskstorage.TemporaryStorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.ConsistencyLevel;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.StoreTransaction;
 
@@ -21,9 +23,13 @@ public class FoundationDBTransaction implements StoreTransaction {
     @Override
     public void commit() throws StorageException {
         if (tr == null) return;
-        tr.commit().get();
-        tr = null;
-
+        try {
+            tr.commit().get();
+            tr = null;
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
     }
 
     @Override
