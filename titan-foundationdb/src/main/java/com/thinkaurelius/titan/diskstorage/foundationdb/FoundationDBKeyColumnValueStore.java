@@ -51,10 +51,10 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     @Override
     public List<Entry> getSlice(KeySliceQuery query, StoreTransaction txh) throws StorageException {
         List<Entry> returnList = new ArrayList<Entry>();
-        RangeQuery queryResult = getTransaction(txh).getRange(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey())).add(getBytes(query.getSliceStart())).pack(), storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey())).add(getBytes(query.getSliceEnd())).pack());
+        Tuple keyPrefix = storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey()));
+        RangeQuery queryResult = getTransaction(txh).getRange(keyPrefix.add(getBytes(query.getSliceStart())).pack(), keyPrefix.add(getBytes(query.getSliceEnd())).pack());
         if (query.getLimit() > 0) queryResult = queryResult.limit(query.getLimit());
         List<KeyValue> kvList = queryResult.asList().get();
-        if (query.getLimit() > 0) assert kvList.size() <= query.getLimit();
 
         for(KeyValue kv : kvList) {
             returnList.add(new Entry(ByteBuffer.wrap(Tuple.fromBytes(kv.getKey()).getBytes(4)), ByteBuffer.wrap(kv.getValue())));
@@ -78,18 +78,21 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     @Override
     public void mutate(ByteBuffer key, List<Entry> additions, List<ByteBuffer> deletions, StoreTransaction txh) throws StorageException {
         Tuple keyPrefix = storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key));
+        byte[] keyIndexKey = storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack();
+
+        if (additions != null) {
+            for (Entry addColumn : additions) {
+                getTransaction(txh).set(keyPrefix.add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
+            }
+            getTransaction(txh).set(keyIndexKey, "".getBytes());
+        }
+
         if (deletions != null) {
             for (ByteBuffer deleteColumn : deletions) {
                 getTransaction(txh).clear(keyPrefix.add(getBytes(deleteColumn)).pack());
             }
             List<KeyValue>  results = getTransaction(txh).getRangeStartsWith(keyPrefix.pack()).asList().get();
-            if (results.size() == 0) getTransaction(txh).clear(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack());
-        }
-        if (additions != null) {
-            for (Entry addColumn : additions) {
-                getTransaction(txh).set(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack(), "".getBytes());
-                getTransaction(txh).set(keyPrefix.add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
-            }
+            if (results.size() == 0) getTransaction(txh).clear(keyIndexKey);
         }
     }
 
