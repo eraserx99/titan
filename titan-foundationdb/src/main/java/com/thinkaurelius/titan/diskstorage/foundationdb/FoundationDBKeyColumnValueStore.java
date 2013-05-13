@@ -80,19 +80,19 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         Tuple keyPrefix = storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key));
         byte[] keyIndexKey = storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack();
 
-        if (additions != null) {
-            for (Entry addColumn : additions) {
-                getTransaction(txh).set(keyPrefix.add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
-            }
-            getTransaction(txh).set(keyIndexKey, "".getBytes());
-        }
-
         if (deletions != null) {
             for (ByteBuffer deleteColumn : deletions) {
                 getTransaction(txh).clear(keyPrefix.add(getBytes(deleteColumn)).pack());
             }
             List<KeyValue>  results = getTransaction(txh).getRangeStartsWith(keyPrefix.pack()).asList().get();
             if (results.size() == 0) getTransaction(txh).clear(keyIndexKey);
+        }
+
+        if (additions != null) {
+            for (Entry addColumn : additions) {
+                getTransaction(txh).set(keyPrefix.add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
+            }
+            getTransaction(txh).set(keyIndexKey, "".getBytes());
         }
     }
 
@@ -139,7 +139,6 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     }
 
     private static Transaction getTransaction(StoreTransaction txh) {
-        assert txh instanceof FoundationDBTransaction;
         return ((FoundationDBTransaction) txh).getTransaction();
     }
 
