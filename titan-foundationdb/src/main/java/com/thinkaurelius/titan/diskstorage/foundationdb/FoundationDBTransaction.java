@@ -1,12 +1,7 @@
 package com.thinkaurelius.titan.diskstorage.foundationdb;
 
-import com.foundationdb.FDBError;
-import com.foundationdb.KeySelector;
-import com.foundationdb.RangeQuery;
 import com.foundationdb.Transaction;
-import com.thinkaurelius.titan.diskstorage.PermanentStorageException;
 import com.thinkaurelius.titan.diskstorage.StorageException;
-import com.thinkaurelius.titan.diskstorage.TemporaryStorageException;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.ConsistencyLevel;
 import com.thinkaurelius.titan.diskstorage.keycolumnvalue.StoreTransaction;
 

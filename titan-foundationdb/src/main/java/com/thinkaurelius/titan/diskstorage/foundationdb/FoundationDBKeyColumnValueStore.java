@@ -80,6 +80,8 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
             for (ByteBuffer deleteColumn : deletions) {
                 getTransaction(txh).clear(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).add(getBytes(deleteColumn)).pack());
             }
+            List<KeyValue>  results = getTransaction(txh).getRangeStartsWith(storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(key)).pack()).asList().get();
+            if (results.size() == 0) getTransaction(txh).clear(storePrefix(Subspace.KEYS_SUBSPACE).add(getBytes(key)).pack());
         }
         if (additions != null) {
             for (Entry addColumn : additions) {
