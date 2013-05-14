@@ -47,7 +47,13 @@ public abstract class KeyColumnValueStoreTest {
 
     @After
     public void tearDown() throws Exception {
-        close();
+        fastClose();
+    }
+
+    public void fastClose() throws StorageException {
+        if (tx != null) tx.rollback();
+        store.close();
+        manager.close();
     }
 
     public void close() throws StorageException {
