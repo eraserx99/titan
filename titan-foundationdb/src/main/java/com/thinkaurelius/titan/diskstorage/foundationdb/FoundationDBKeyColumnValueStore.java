@@ -54,7 +54,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
         List<Entry> returnList = new ArrayList<Entry>();
         Tuple keyPrefix = storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey()));
         RangeQuery queryResult = getTransaction(txh).getRange(KeySelector.firstGreaterOrEqual(keyPrefix.add(getBytes(query.getSliceStart())).pack()), KeySelector.firstGreaterOrEqual(keyPrefix.add(getBytes(query.getSliceEnd())).pack()));
-        if (query.getLimit() > 0) queryResult = queryResult.limit(query.getLimit());
+        if (query.hasLimit()) queryResult = queryResult.limit(query.getLimit());
         List<KeyValue> kvList = queryResult.asList().get();
 
         for(KeyValue kv : kvList) {
@@ -85,8 +85,6 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
             for (ByteBuffer deleteColumn : deletions) {
                 getTransaction(txh).clear(keyPrefix.add(getBytes(deleteColumn)).pack());
             }
-            List<KeyValue> results = getTransaction(txh).getRangeStartsWith(keyPrefix.pack()).asList().get();
-            if (results.size() == 0) getTransaction(txh).clear(keyIndexKey);
         }
 
         if (additions != null) {
@@ -94,6 +92,11 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
                 getTransaction(txh).set(keyPrefix.add(getBytes(addColumn.getColumn())).pack(), getBytes(addColumn.getValue()));
             }
             getTransaction(txh).set(keyIndexKey, "".getBytes());
+        }
+
+        if (deletions != null) {
+            List<KeyValue> results = getTransaction(txh).getRangeStartsWith(keyPrefix.pack()).asList().get();
+            if (results.size() == 0) getTransaction(txh).clear(keyIndexKey);
         }
     }
 
