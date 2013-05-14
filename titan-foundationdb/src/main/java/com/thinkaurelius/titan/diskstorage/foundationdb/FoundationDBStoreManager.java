@@ -71,11 +71,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
     @Override
     public StoreTransaction beginTransaction(ConsistencyLevel consistencyLevel) throws StorageException {
         Transaction tr = db.createTransaction();
-        return new FoundationDBTransaction(tr, this);
-    }
-
-    public Transaction createDbTransaction() {
-        return db.createTransaction();
+        return new FoundationDBTransaction(tr);
     }
 
     @Override
