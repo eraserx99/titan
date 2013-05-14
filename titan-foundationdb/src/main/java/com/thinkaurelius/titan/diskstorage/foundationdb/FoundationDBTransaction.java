@@ -10,9 +10,11 @@ import com.thinkaurelius.titan.diskstorage.keycolumnvalue.StoreTransaction;
 public class FoundationDBTransaction implements StoreTransaction {
 
     private Transaction tr;
+    private FoundationDBStoreManager manager;
 
-    public FoundationDBTransaction(Transaction tr) {
+    public FoundationDBTransaction(Transaction tr, FoundationDBStoreManager manager) {
         this.tr = tr;
+        this.manager = manager;
     }
 
     public Transaction getTransaction() {
@@ -25,7 +27,7 @@ public class FoundationDBTransaction implements StoreTransaction {
         if (tr == null) return;
         try {
             tr.commit().get();
-            tr = null;
+            tr = manager.createDbTransaction();
         }
         catch (FDBError error) {
             throw new TemporaryStorageException(error.getMessage(), error.getCause());
@@ -36,12 +38,19 @@ public class FoundationDBTransaction implements StoreTransaction {
     public void rollback() throws StorageException {
         if (tr == null) return;
         tr.reset();
-        tr = null;
+        tr = manager.createDbTransaction();
     }
 
     @Override
     public void flush() throws StorageException {
-                      // todo
+        if (tr == null) return;
+        try {
+            tr.commit().get();
+            tr = manager.createDbTransaction();
+        }
+        catch (FDBError error) {
+            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+        }
     }
 
     @Override
