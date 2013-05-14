@@ -5,7 +5,9 @@ import com.thinkaurelius.titan.core.TitanFactory;
 import com.thinkaurelius.titan.diskstorage.StorageException;
 import com.thinkaurelius.titan.diskstorage.foundationdb.FoundationDBStoreManager;
 import com.thinkaurelius.titan.graphdb.configuration.GraphDatabaseConfiguration;
+import com.thinkaurelius.titan.graphdb.foundationdb.FoundationDBGraphTest;
 import com.tinkerpop.blueprints.Graph;
+import org.apache.commons.configuration.Configuration;
 
 
 public class FoundationDBBlueprintsTest extends TitanBlueprintsTest {
@@ -35,7 +37,7 @@ public class FoundationDBBlueprintsTest extends TitanBlueprintsTest {
 
     @Override
     public boolean supportsMultipleGraphs() {
-        return true;
+        return false;
     }
 
     @Override
