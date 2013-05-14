@@ -66,6 +66,13 @@ public abstract class MultiWriteKeyColumnValueStoreTest {
         if (null != manager) manager.close();
     }
 
+    public void fastClose() throws StorageException {
+        if (tx != null) tx.rollback();
+        if (null != store1) store1.close();
+        if (null != store2) store2.close();
+        if (null != manager) manager.close();
+    }
+
     @Test
     public void deletionsAppliedBeforeAdditions() throws StorageException {
 
