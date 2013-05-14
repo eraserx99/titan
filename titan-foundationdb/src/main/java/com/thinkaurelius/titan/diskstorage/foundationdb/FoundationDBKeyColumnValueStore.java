@@ -1,5 +1,6 @@
 package com.thinkaurelius.titan.diskstorage.foundationdb;
 
+import com.foundationdb.KeySelector;
 import com.foundationdb.KeyValue;
 import com.foundationdb.RangeQuery;
 import com.foundationdb.Transaction;
@@ -52,7 +53,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
     public List<Entry> getSlice(KeySliceQuery query, StoreTransaction txh) throws StorageException {
         List<Entry> returnList = new ArrayList<Entry>();
         Tuple keyPrefix = storePrefix(Subspace.DATA_SUBSPACE).add(getBytes(query.getKey()));
-        RangeQuery queryResult = getTransaction(txh).getRange(keyPrefix.add(getBytes(query.getSliceStart())).pack(), keyPrefix.add(getBytes(query.getSliceEnd())).pack());
+        RangeQuery queryResult = getTransaction(txh).getRange(KeySelector.firstGreaterOrEqual(keyPrefix.add(getBytes(query.getSliceStart())).pack()), KeySelector.firstGreaterOrEqual(keyPrefix.add(getBytes(query.getSliceEnd())).pack()));
         if (query.getLimit() > 0) queryResult = queryResult.limit(query.getLimit());
         List<KeyValue> kvList = queryResult.asList().get();
 
@@ -84,7 +85,7 @@ public class FoundationDBKeyColumnValueStore implements KeyColumnValueStore {
             for (ByteBuffer deleteColumn : deletions) {
                 getTransaction(txh).clear(keyPrefix.add(getBytes(deleteColumn)).pack());
             }
-            List<KeyValue>  results = getTransaction(txh).getRangeStartsWith(keyPrefix.pack()).asList().get();
+            List<KeyValue> results = getTransaction(txh).getRangeStartsWith(keyPrefix.pack()).asList().get();
             if (results.size() == 0) getTransaction(txh).clear(keyIndexKey);
         }
 
