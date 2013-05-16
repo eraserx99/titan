@@ -27,7 +27,8 @@ public class FoundationDBTransaction implements StoreTransaction {
             tr.commit().get();
         }
         catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+            if(error.getCode() == 1007) throw new TemporaryStorageException("Transaction was open for too long.", error.getCause());
+            else throw new TemporaryStorageException(error.getMessage(), error.getCause());
         }
     }
 
@@ -44,7 +45,8 @@ public class FoundationDBTransaction implements StoreTransaction {
             tr.commit().get();
         }
         catch (FDBError error) {
-            throw new TemporaryStorageException(error.getMessage(), error.getCause());
+            if(error.getCode() == 1007) throw new TemporaryStorageException("Transaction was open for too long.", error.getCause());
+            else throw new TemporaryStorageException(error.getMessage(), error.getCause());
         }
     }
 
