@@ -22,12 +22,19 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
     private final StoreFeatures features;
 
     public final String dbname;
+    public final String clusterFile;
 
     public FoundationDBStoreManager(Configuration config) {
         dbname = config.getString("tablename", "titan");
+        clusterFile = config.getString("clusterfile", "NONE");
 
         FDB fdb = FDB.selectAPIVersion(21);
-        db = fdb.open().get();
+        if(clusterFile.equals("NONE")) {
+            db = fdb.open().get();
+        }
+        else {
+            db = fdb.open(clusterFile).get();
+        }
         openStores = new ConcurrentHashMap<String, FoundationDBKeyColumnValueStore>();
         configuration = new ConcurrentHashMap<String, String>();
         features = new StoreFeatures();
