@@ -1,1 +1,5 @@
 storage.backend=foundationdb
+
+# # # Uncomment below to use a cluster file other than the default.
+
+# storage.clusterfile=fdb.cluster
