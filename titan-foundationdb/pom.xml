@@ -27,6 +27,13 @@
             <artifactId>titan-es</artifactId>
             <version>${titan.version}</version>
         </dependency>
+        <dependency>
+	    <groupId>com.foundationdb</groupId>
+            <artifactId>foundationdb</artifactId>
+	    <version>0.2.2.2</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/lib/fdb-java-0.2.2-2.jar</systemPath>
+	</dependency>
         <!--<dependency>-->
         <!--Someday the FoundationDB Maven artifact goes here-->
         <!--</dependency>-->

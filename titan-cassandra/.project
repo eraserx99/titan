@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+  <name>titan-cassandra</name>
+  <comment>Titan is a distributed graph database optimized for processing massive-scale graphs represented over a machine
+        cluster.
+        Titan separates the concerns of graph processing and manipulation from storing the graph on disk,
+        delegating that concern to an extensible set of persistence solutions. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects>
+    <project>titan-core</project>
+    <project>titan-test</project>
+    <project>titan-es</project>
+  </projects>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+  </natures>
+</projectDescription>

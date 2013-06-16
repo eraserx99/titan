@@ -25,12 +25,14 @@
             <groupId>com.thinkaurelius.titan</groupId>
             <artifactId>titan-hbase</artifactId>
             <version>${titan.version}</version>
-        </dependency>
+    	</dependency>
+        <!--
         <dependency>
             <groupId>com.thinkaurelius.titan</groupId>
             <artifactId>titan-foundationdb</artifactId>
             <version>${titan.version}</version>
-        </dependency>
+	</dependency>
+	-->
         <dependency>
             <groupId>com.thinkaurelius.titan</groupId>
             <artifactId>titan-es</artifactId>
