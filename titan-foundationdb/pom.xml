@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.thinkaurelius.titan</groupId>
@@ -28,12 +29,12 @@
             <version>${titan.version}</version>
         </dependency>
         <dependency>
-	    <groupId>com.foundationdb</groupId>
+            <groupId>com.foundationdb</groupId>
             <artifactId>foundationdb</artifactId>
-	    <version>0.2.2.2</version>
-	    <scope>system</scope>
-	    <systemPath>${project.basedir}/lib/fdb-java-0.2.2-2.jar</systemPath>
-	</dependency>
+            <version>0.2.2.5</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/fdb-java-0.2.2-5.jar</systemPath>
+        </dependency>
         <!--<dependency>-->
         <!--Someday the FoundationDB Maven artifact goes here-->
         <!--</dependency>-->
