@@ -97,5 +97,5 @@
   <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-queries/3.6.2/lucene-queries-3.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-memory/3.6.2/lucene-memory-3.6.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-highlighter/3.6.2/lucene-highlighter-3.6.2.jar"/>
-  <classpathentry kind="lib" path="lib/fdb-java-0.2.2-2.jar"/>
+  <classpathentry kind="lib" path="lib/fdb-java-0.2.2-5.jar"/>
 </classpath>

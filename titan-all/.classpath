@@ -144,4 +144,6 @@
   <classpathentry kind="var" path="M2_REPO/net/java/dev/jets3t/jets3t/0.7.1/jets3t-0.7.1.jar"/>
   <classpathentry kind="var" path="M2_REPO/net/sf/kosmosfs/kfs/0.3/kfs-0.3.jar"/>
   <classpathentry kind="var" path="M2_REPO/hsqldb/hsqldb/1.8.0.10/hsqldb-1.8.0.10.jar"/>
+  <classpathentry kind="src" path="/titan-foundationdb"/>
+  <classpathentry kind="lib" path="/Users/steve/Workspace/titan-foundationdb/titan-foundationdb/lib/fdb-java-0.2.2-5.jar"/>
 </classpath>

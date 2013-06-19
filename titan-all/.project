@@ -11,6 +11,7 @@
     <project>titan-es</project>
     <project>titan-berkeleyje</project>
     <project>titan-hbase</project>
+    <project>titan-foundationdb</project>
   </projects>
   <buildSpec>
     <buildCommand>

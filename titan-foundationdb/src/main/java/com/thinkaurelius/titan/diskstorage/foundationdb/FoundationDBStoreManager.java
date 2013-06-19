@@ -28,7 +28,7 @@ public class FoundationDBStoreManager implements KeyColumnValueStoreManager {
         dbname = config.getString("tablename", "titan");
         clusterFile = config.getString("clusterfile", "NONE");
 
-        FDB fdb = FDB.selectAPIVersion(21);
+        FDB fdb = FDB.selectAPIVersion(22);
         if(clusterFile.equals("NONE")) {
             db = fdb.open().get();
         }
